@@ -12,6 +12,8 @@ namespace Inventory.Model
 
         public Vector2 lastPlayerPos;
 
+        public int LastMap;
+
         [field: SerializeField]
         public int Size { get; private set; } = 10;
 
