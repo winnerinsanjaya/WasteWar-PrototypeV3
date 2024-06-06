@@ -15,9 +15,15 @@ public class PickUpSystem : MonoBehaviour
         {
             int reminder = inventoryData.AddItem(item.InventoryItem, item.Quantity);
             if (reminder == 0)
+            {
                 item.DestroyItem();
-            else
-                item.Quantity = reminder;
+            }
+            else { item.Quantity = reminder; }
+                
+
+            
         }
+
+        GameDatabase.instance.SaveInventory(inventoryData);
     }
 }

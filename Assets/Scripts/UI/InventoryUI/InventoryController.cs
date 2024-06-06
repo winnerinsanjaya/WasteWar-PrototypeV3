@@ -37,15 +37,32 @@ namespace Inventory
             inventoryData.OnInventoryUpdated += UpdateInventoryUI;
             foreach (InventoryItem item in initialItems)
             {
-                if (item.IsEmpty)
-                    continue;
-                inventoryData.AddItem(item);
+                if (GameDatabase.instance.isLoadGame == false) //jika new game
+                {
+                    if (item.IsEmpty)
+                        continue;
+                    inventoryData.AddItem(item);
+                   
+                }
+                if (GameDatabase.instance.isLoadGame == true) //jika continue
+                {
+                    this.gameObject.transform.position = GameDatabase.instance.InventorySOSave.lastPlayerPos;
+
+
+                    for (int i = 0; i < GameDatabase.instance.InventorySOSave.inventoryItems.Count; i++)
+                    {
+                        inventoryData.inventoryItems[i] = GameDatabase.instance.InventorySOSave.inventoryItems[i];
+                    }
+
+                }
+                    GameDatabase.instance.SaveInventory(inventoryData);
             }
         }
 
         private void UpdateInventoryUI(Dictionary<int, InventoryItem> inventoryState)
         {
             inventoryUI.ResetAllItems();
+
             foreach (var item in inventoryState)
             {
                 inventoryUI.UpdateData(item.Key, item.Value.item.ItemImage, item.Value.quantity);
@@ -152,6 +169,9 @@ namespace Inventory
 
         public void Update()
         {
+            GameDatabase.instance.SavePlayerPos(this.gameObject.transform.position);
+
+
             if (Input.GetKeyDown(KeyCode.Tab))
             {
                 if (inventoryUI.isActiveAndEnabled == false)
